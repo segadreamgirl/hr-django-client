@@ -40,7 +40,12 @@ export const Ticket = () => {
     }
 
     const updateTicket = (evt) => {
+            
         const updatedTicket = {...ticket, employee: parseInt(evt.target.value)}
+
+        if (evt.target.className === "ticket--close") {
+            updatedTicket.date_completed = new Date().toISOString().slice(0,10)
+        }
 
         fetchIt(
             `http://localhost:8000/tickets/${ticketId}`,
@@ -91,7 +96,7 @@ export const Ticket = () => {
                         {
                             ticket.date_completed === null
                                 ? employeePicker(ticket)
-                                : `Completed by ${ticket.employee?.name} on ${ticket.date_completed}`
+                                : `Completed by ${ticket.employee?.full_name} on ${ticket.date_completed}`
                         }
                     </div>
                     <div className="footerItem">
@@ -99,7 +104,7 @@ export const Ticket = () => {
                     </div>
                     {
                         isStaff()
-                            ? ""
+                            ? <button className="ticket--close" onClick={updateTicket}>Mark Done</button>
                             : <button onClick={deleteTicket}>Delete</button>
                     }
                 </footer>
